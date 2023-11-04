@@ -1,5 +1,3 @@
-
-Copy code
 # ComposeWeChatUI
 
 This repository contains a sample Android app that mimics the UI of WeChat. It's built using Jetpack Compose and is intended for educational purposes to showcase the usage of Compose in building modern Android UIs.
@@ -21,5 +19,6 @@ Learn More About Compose
 To learn more about Jetpack Compose, check out the following resources:
 
 [Jetpack Compose Tutorial](https://developer.android.com/jetpack/compose/tutorial)
+
 [Compose Pathways](https://developer.android.com/courses/pathways/compose)
 
