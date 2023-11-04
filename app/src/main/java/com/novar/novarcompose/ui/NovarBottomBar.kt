@@ -29,7 +29,6 @@ import com.novar.novarcompose.ui.theme.NovarComposeTheme
 
 @Composable
 fun NovarBottomBar(selected: Int = 0, onSelectedChanged: (Int) -> Unit) {
-    val viewModel: NovarViewModel = viewModel()
     Row(Modifier.background(NovarComposeTheme.colors.bottomBar)) {
         TabItem(
             if (selected == 0) R.drawable.ic_chat_filled else R.drawable.ic_chat_outlined,
@@ -89,8 +88,6 @@ fun TabItem(@DrawableRes iconId: Int, tint: Color, title: String, modifier: Modi
         Text(title, fontSize = 11.sp, color = tint)
     }
 }
-
-//    object
 
 @Preview(showBackground = true)
 @Composable

@@ -2,7 +2,9 @@ package com.novar.novarcompose.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -27,6 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.novar.novarcompose.NovarViewModel
 import com.novar.novarcompose.R
 import com.novar.novarcompose.data.Chat
 import com.novar.novarcompose.data.Message
@@ -36,48 +41,67 @@ import com.novar.novarcompose.ui.theme.red1
 
 @Composable
 fun ChatList(chats: List<Chat>) {
-    LazyColumn(Modifier.fillMaxSize()) {
-        items(chats) { chat ->
-            Row {
-                Image(
-                    painterResource(chat.friend.avatar), chat.friend.name,
-                    Modifier
-                        .padding(8.dp)
-                        .size(48.dp)
-                        .unread(!chat.messages.last().read, NovarComposeTheme.colors.badge)
-                        .clip(RoundedCornerShape(4.dp))
-                )
-                Column(
-                    Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)
-                ) {
-                    Text(
-                        chat.friend.name,
-                        fontSize = 16.sp,
-                        color = NovarComposeTheme.colors.textPrimary
+    Column(
+        modifier = Modifier
+            .background(NovarComposeTheme.colors.background)
+            .fillMaxSize()
+    ) {
+        NovarTopBar("NovarChat")
+        LazyColumn(Modifier.background(NovarComposeTheme.colors.listItem)) {
+            itemsIndexed(chats) { index, chat ->
+                ChatListItem(chat)
+                if (index < chats.lastIndex)
+                    Divider(
+                        Modifier
+                            .padding(60.dp, 0.dp, 0.dp, 0.dp)
+                            .fillMaxWidth(),
+                        color = NovarComposeTheme.colors.chatListDivider,
+                        thickness = 0.8.dp
                     )
-                    Text(
-                        chat.messages.last().text,
-                        fontSize = 14.sp,
-                        color = NovarComposeTheme.colors.textSecondary
-                    )
-                }
-                Text(
-                    chat.messages.last().time,
-                    Modifier.padding(8.dp, 8.dp, 12.dp, 8.dp),
-                    fontSize = 11.sp, color = NovarComposeTheme.colors.textSecondary
-                )
             }
+        }
+    }
+}
 
-            Divider(
-                Modifier
-                    .padding(60.dp, 0.dp, 0.dp, 0.dp)
-                    .fillMaxWidth(),
-                color = NovarComposeTheme.colors.chatListDivider,
-                thickness = 0.8.dp
+@Composable
+private fun ChatListItem(chat: Chat) {
+    val viewModel: NovarViewModel = viewModel()
+    Row(
+        Modifier
+            .clickable {
+                viewModel.startChat(chat)
+            }
+            .fillMaxWidth()) {
+        Image(
+            painterResource(chat.friend.avatar), chat.friend.name,
+            Modifier
+                .padding(8.dp)
+                .size(48.dp)
+                .unread(!chat.messages.last().read, NovarComposeTheme.colors.badge)
+                .clip(RoundedCornerShape(4.dp))
+        )
+        Column(
+            Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
+            Text(
+                chat.friend.name,
+                fontSize = 16.sp,
+                color = NovarComposeTheme.colors.textPrimary
+            )
+            Text(
+                chat.messages.last().text,
+                fontSize = 14.sp,
+                color = NovarComposeTheme.colors.textSecondary
             )
         }
+        Text(
+            chat.messages.last().time,
+            Modifier.padding(8.dp, 8.dp, 12.dp, 8.dp),
+            fontSize = 11.sp,
+            color = NovarComposeTheme.colors.textSecondary
+        )
     }
 }
 
